@@ -12,11 +12,3 @@
         <li> Latent Factor Model </li>
     </ul>
 </section>
-
-<section>
-    <h2> Packages Used </h2> :
-    <ul>
-        <li> numpy </li>
-        <li> pandas </li>
-    </ul>
-</section>
