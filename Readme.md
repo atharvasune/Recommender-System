@@ -14,21 +14,21 @@
 </section>
 
 <section>
-    <h2> Directory Structure </h2> :
+    <h2> Directory Structure </h2> 
     <ul>
-        <li><ul>ml-1m</ul>:
+        <li><ul>ml-1m</ul>
             <br />
             <p>This folder contains the dataset to work on. For further info refer <a href="./ml-1m/README">ReadMe</a></p>
         </li>
-        <li><ul>pickle</ul>:
+        <li><ul>pickle</ul>
             <br />
             <p>All the persistent storage for files should be done in this folder. Take care of file names.</p>
         </li>
-        <li><ul>train</ul>:
+        <li><ul>train</ul>
             <br />
             <p>Contains the code to retrieve required data from given dataset
             <br />
-            Structure:
+            Structure
                 <ul>
                     <li>movie details: to retrieve movie details from dataset </li>
                     <li>user: to retrieve user details from dataset</li>
