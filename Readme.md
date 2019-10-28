@@ -18,7 +18,7 @@
     <ul>
         <li><ul>ml-1m</ul>
             <br />
-            <p>This folder contains the dataset to work on. For further info refer <a href="./ml-1m/README">ReadMe</a></p>
+            <p>This folder contains the dataset to work on. </p>
         </li>
         <li><ul>pickle</ul>
             <br />
