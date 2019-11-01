@@ -38,3 +38,11 @@
         </li>
     </ul>
 </section>
+
+<section>
+    <h3>Members:</h3>
+    <ul>
+        <li>Atharva Sune-2017A7PS0183H</li>
+        <li>Ameya Salankar-2017A7PS0182H</li>
+        <li>Prakhar Goenka-2017A7PS1715H</li>
+        <li>Arnav Buch-2017A7PS1722H</li>
