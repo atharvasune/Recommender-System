@@ -1,2 +1,5 @@
 *sublime*
+testing_data/
+training_data/
+__pycache__
 *pickle

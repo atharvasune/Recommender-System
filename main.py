@@ -1,4 +1,5 @@
 # import all classes from recommenders directory
+from recommenders.collaborative import Collaborative
 
 def main():
 
@@ -12,6 +13,8 @@ def main():
 		for each of the recommender types
 	'''
 
+	cb = Collaborative()
+	print(cb.get_recommendation(2))
 
 
 
