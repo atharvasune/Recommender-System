@@ -16,6 +16,17 @@
 <section>
     <h2> Directory Structure </h2> 
     <ul>
+        <!-- Update readme
+            Root/
+                main.py
+                recommenders/
+                    1. classes for all types
+                    2. csv to store raw data(csv files)
+                    3. training_data to store preprocessed training(pickle files)
+                    4. testing_data to store preprocessed testing data(pickle files)
+                    (both training and testing data can contain common files used by different algos)
+                    rest is deprecated
+        -->
         <li><ul>ml-1m</ul>
             <br />
             <p>This folder contains the dataset to work on. </p>
