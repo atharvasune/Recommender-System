@@ -8,7 +8,7 @@ class CollabBaseline():
 
     # following are the public methods, add others as per need
 
-    def get_recommendation(userId):
+    def get_recommendation(user_id):
         '''
             Function to return movie recommendations for the given userId
         '''
