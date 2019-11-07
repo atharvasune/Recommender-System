@@ -1,5 +1,9 @@
+import pandas as pd
+
 # import all classes from recommenders directory
 from recommenders.collaborative import Collaborative
+from recommenders.collab_with_baseline import CollaborativeWB
+from recommenders.data import *
 
 def main():
 
@@ -12,14 +16,27 @@ def main():
 		(4) execution time
 		for each of the recommender types
 	'''
+	# get movie details' table
+	movie_ind = movie_index()
 
+	# input user id
+	user_id = int(input('Enter user id \n'))
+
+	# recommendations using collaborative filtering
 	cb = Collaborative()
-	print(cb.get_recommendation(2))
+	movie_list = cb.get_recommendation(user_id)
+	movie_list = pd.merge(movie_list, movie_ind, on = 'movieId', how = 'inner')
+	print('Recommendations using collaborative filtering for the user are \n')
+	print(movie_list)
+
+	# recommendations using collaborative filtering with baseline
+	cwb = CollaborativeWB()
+	movie_list = cwb.get_recommendation(user_id)
+	movie_list = pd.merge(movie_list, movie_ind, on = 'movieId', how = 'inner')
+	print('Recommendations using collaborative filtering with baseline for the user are \n')
+	print(movie_list)
 
 
 
-
-
-# CHECK THIS PART!!
 if __name__ == '__main__':
     main()
