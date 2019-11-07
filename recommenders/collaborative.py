@@ -2,7 +2,7 @@
 
 import pickle
 import pandas as pd
-import numpy as mp
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -11,9 +11,6 @@ class Collaborative():
     def __init__(self):
         pass
 
-
-    # following are the public methods, add others as per need
-
     def get_recommendation(self, user_id):
         '''
             Function to return 10 movie recommendations for the given user_id
@@ -21,14 +18,16 @@ class Collaborative():
 
         m_u_c = self.get_trained_data()
         m_u_train, m_u_test = self.get_train_test()
+        m_u_train = m_u_train.fillna(0)
 
         predicted = m_u_c.iloc[:, user_id - 1]
-        print(predicted.head())
         training = m_u_train.iloc[:, user_id - 1]
         training = training.isnull().astype('int')
-        predicted.mul(training)
-        predicted.sort_values(ascending = False)
 
+        predicted.mul(training)
+        predicted = pd.DataFrame(predicted.sort_values(ascending = False)).reset_index()
+
+        predicted.columns = ['movieId', 'predicted rating']
         return predicted[: 10]
 
     def get_trained_data(self):
@@ -43,27 +42,25 @@ class Collaborative():
             with open('recommenders/training_data/m_u_c', 'rb') as infile:
                 m_u_c = pickle.load(infile)
         except EnvironmentError:
-            m_u_train, m_u_test = self.get_train_test()
-            
-            # row wise mean for all rows
-            row_mean = m_u_train.mean(axis = 1)
+            m_u_train, m_u_test = self.get_train_test()            
+            m_u_c = m_u_train
 
-            # replace NaN with row means
-            m_u_train = m_u_train.T.fillna(m_u_train.mean(axis=1)).T
+            # row wise mean for all rows
+            row_mean = m_u_c.mean(axis = 1)
 
             # create mean centered ratings matrix
-            m_u_train = m_u_train.subtract(row_mean, axis = 0)
+            m_u_c = m_u_c.T.fillna(row_mean).T
+            m_u_c = m_u_c.subtract(row_mean, axis = 0)
 
             # generate similarity matrix
-            similarity = cosine_similarity(m_u_train)
+            similarity = cosine_similarity(m_u_c)
             similarity = pd.DataFrame(similarity, index = m_u_train.index, columns = m_u_train.index)
+            np.fill_diagonal(similarity.values, 1)
 
-            sim_sum = similarity.sum()
-            m_u_c = ((m_u_train.T).dot(similarity)).T
+            sim_sum = (similarity.abs()).dot(pd.notna(m_u_train).astype('int'))
 
-            # NOT TESTED
-            m_u_c = m_u_c.div(sim_sum, axis = 0).fillna(0)
-            print(m_u_c.head())
+            m_u_c = similarity.dot(m_u_train.fillna(0))
+            m_u_c = m_u_c.div(sim_sum).fillna(0)
 
             try:
                 with open('recommenders/training_data/m_u_c', 'wb') as outfile:
@@ -81,7 +78,7 @@ class Collaborative():
         '''
         # load train, test from persistant storage
         try:
-            with open('recommenders/training/m_u', 'rb') as infile:
+            with open('recommenders/training_data/m_u', 'rb') as infile:
                 m_u_train = pickle.load(infile)
             with open('recommenders/testing_data/m_u', 'rb') as infile:
                 m_u_test = pickle.load(infile)
@@ -108,7 +105,7 @@ class Collaborative():
 
             except EnvironmentError:
                 print(EnvironmentError) 
-                return 1      
+                return None      
 
 
 
