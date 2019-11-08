@@ -28,6 +28,7 @@ def main():
 	movie_list = pd.merge(movie_list, movie_ind, on = 'movieId', how = 'inner')
 	print('Recommendations using collaborative filtering for the user are \n', movie_list)
 	print('RMSE is\n', cb.get_rmse())
+	print('MAE is\n', cb.get_mae())
 
 	# recommendations using collaborative filtering with baseline
 	cwb = CollaborativeWB()
@@ -35,6 +36,7 @@ def main():
 	movie_list = pd.merge(movie_list, movie_ind, on = 'movieId', how = 'inner')
 	print('Recommendations using collaborative filtering with baseline for the user are \n', movie_list)
 	print('RMSE is\n', cwb.get_rmse())
+	print('MAE is\n', cwb.get_mae())
 
 
 if __name__ == '__main__':
