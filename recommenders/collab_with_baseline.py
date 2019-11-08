@@ -185,7 +185,7 @@ class CollaborativeWB():
                 rmse += (rows['rating'] - (m_u_c.loc[movie_id])[user_id])**2
                 n += 1
 
-        rmse = (rmse**(0.5))/n
+        rmse = (rmse/n)**(0.5)
 
         return rmse
 
@@ -195,8 +195,31 @@ class CollaborativeWB():
             Calculate and return MAE value by comparing test and train data.
             Gets train/test data from corresponding functions.
         '''
+        # get test dataset
+        try:
+            with open('recommenders/testing_data/m_u_list', 'rb') as infile:
+                m_u_test_list = (pickle.load(infile)).reset_index()
+        except EnvironmentError:
+            print(EnvironmentError)
+
+        # get predicted ratings
         m_u_c = self.get_trained_data()
-        m_u_train, m_u_test = self.get_train_test()
+
+        # initialise sum
+        mae = 0
+        # initialise number of elements
+        n = 0
+
+        for index, rows in m_u_test_list.iterrows():
+            user_id = rows['userId']
+            movie_id = rows['movieId']
+            if(movie_id in m_u_c.index):
+                mae += abs((rows['rating'] - (m_u_c.loc[movie_id])[user_id]))
+                n += 1
+
+        mae /= n
+
+        return mae
 
 
 if __name__ == '__main__':
