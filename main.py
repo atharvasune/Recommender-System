@@ -26,16 +26,15 @@ def main():
 	cb = Collaborative()
 	movie_list = cb.get_recommendation(user_id)
 	movie_list = pd.merge(movie_list, movie_ind, on = 'movieId', how = 'inner')
-	print('Recommendations using collaborative filtering for the user are \n')
-	print(movie_list)
+	print('Recommendations using collaborative filtering for the user are \n', movie_list)
+	print('RMSE is\n', cb.get_rmse())
 
 	# recommendations using collaborative filtering with baseline
 	cwb = CollaborativeWB()
 	movie_list = cwb.get_recommendation(user_id)
 	movie_list = pd.merge(movie_list, movie_ind, on = 'movieId', how = 'inner')
-	print('Recommendations using collaborative filtering with baseline for the user are \n')
-	print(movie_list)
-
+	print('Recommendations using collaborative filtering with baseline for the user are \n', movie_list)
+	print('RMSE is\n', cwb.get_rmse())
 
 
 if __name__ == '__main__':
