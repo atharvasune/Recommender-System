@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import mean_squared_error
 
 class Collaborative():
 
@@ -61,6 +62,7 @@ class Collaborative():
 
             m_u_c = similarity.dot(m_u_train.fillna(0))
             m_u_c = m_u_c.div(sim_sum).fillna(0)
+            m_u_c = m_u_c.clip(1, 5)
 
             try:
                 with open('recommenders/training_data/m_u_c', 'wb') as outfile:
@@ -88,8 +90,9 @@ class Collaborative():
             # if error, generate, store and then return
             try:
                 m_u_raw = pd.read_csv('recommenders/csv/ratings.csv')
-                m_u_raw = pd.pivot_table(m_u_raw, values = 'rating', index = 'movieId', columns = 'userId')
-                m_u_train, m_u_test = train_test_split(m_u_raw, test_size = 0.2)
+                m_u_train, m_u_test_list = train_test_split(m_u_raw, test_size = 0.2)
+                m_u_train = pd.pivot_table(m_u_train, values = 'rating', index = 'movieId', columns = 'userId')
+                m_u_test = pd.pivot_table(m_u_test_list, values = 'rating', index = 'movieId', columns = 'userId')
 
                 # dump m_u and m_u_test
                 try:
@@ -97,6 +100,8 @@ class Collaborative():
                         pickle.dump(m_u_train, outfile)
                     with open('recommenders/testing_data/m_u', 'wb') as outfile:
                         pickle.dump(m_u_test, outfile)
+                    with open('recommenders/testing_data/m_u_list', 'wb') as outfile:
+                        pickle.dump(m_u_test_list, outfile)
                     return m_u_train, m_u_test
                 except EnvironmentError:
                     print(EnvironmentError)
@@ -114,8 +119,31 @@ class Collaborative():
             Calculate and return RMSE value by comparing test and train data.
             Gets train/test data from corresponding functions.
         '''
+        # get test dataset
+        try:
+            with open('recommenders/testing_data/m_u_list', 'rb') as infile:
+                m_u_test_list = (pickle.load(infile)).reset_index()
+        except EnvironmentError:
+            print(EnvironmentError)
+
+        # get predicted ratings
         m_u_c = self.get_trained_data()
-        m_u_train, m_u_test = self.get_train_test()
+
+        # initialise sum
+        rmse = 0
+        # initialise number of elements
+        n = 0
+
+        for index, rows in m_u_test_list.iterrows():
+            user_id = rows['userId']
+            movie_id = rows['movieId']
+            if(movie_id in m_u_c.index):
+                rmse += (rows['rating'] - (m_u_c.loc[movie_id])[user_id])**2
+                n += 1
+
+        rmse = (rmse**(0.5))/n
+
+        return rmse
 
     def get_mae(self):
         '''
