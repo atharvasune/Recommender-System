@@ -1,0 +1,8 @@
+get C
+get R
+get W
+get svd of W
+get pseudo inverse of sigma
+get U
+
+get CUR

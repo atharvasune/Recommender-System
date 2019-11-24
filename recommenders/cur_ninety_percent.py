@@ -2,17 +2,17 @@
 
 class CurNinety():
 
-	def __init__():
-        pass
+	def __init__(self):
+		pass
 
 
     # following are the public methods, add others as per need
 
-    def get_recommendation(userId):
+	def get_recommendation(userId):
         '''
             Function to return movie recommendations for the given userId
         '''
-        pass
+		pass
 
     def generate_train_data():
         '''
